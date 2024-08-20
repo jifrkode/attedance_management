@@ -12,11 +12,20 @@ class AttendanceFactory extends Factory
 
     public function definition()
     {
+        // 現在の日付を取得
+        $date = $this->faker->date();
+        
+        // ランダムな開始時間を生成
+        $startTime = $this->faker->dateTimeBetween("$date 00:00:00", "$date 23:59:59");
+        
+        // 開始時間以降でランダムな終了時間を生成
+        $endTime = $this->faker->dateTimeBetween($startTime, "$date 23:59:59");
+
         return [
             'user_id' => User::factory(), // 関連するユーザーを作成
-            'date' => $this->faker->date(),
-            'start_time' => $this->faker->time(),
-            'end_time' => $this->faker->time(),
+            'date' => $date, // 日付を設定
+            'start_time' => $startTime->format('H:i:s'),
+            'end_time' => $endTime->format('H:i:s'),
         ];
     }
 }

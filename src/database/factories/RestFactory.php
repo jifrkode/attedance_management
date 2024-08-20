@@ -12,12 +12,17 @@ class RestFactory extends Factory
 
     public function definition()
     {
+        // Create an instance of Attendance to get start_time and end_time
+        $attendance = Attendance::factory()->create();
+
+        // Generate start_time and end_time for Rest within the range of Attendance times
+        $start_time = $this->faker->dateTimeBetween($attendance->start_time, $attendance->end_time);
+        $end_time = $this->faker->dateTimeBetween($start_time, $attendance->end_time);
+
         return [
-            'attendance_id' => Attendance::factory(), // Attendance ファクトリーを利用して attendance_id を設定
-            'start_time' => $this->faker->dateTimeThisMonth(),
-            'end_time' => $this->faker->dateTimeThisMonth(),
+            'attendance_id' => $attendance->id,
+            'start_time' => $start_time->format('Y-m-d H:i:s'),
+            'end_time' => $end_time->format('Y-m-d H:i:s'),
         ];
     }
 }
-
-

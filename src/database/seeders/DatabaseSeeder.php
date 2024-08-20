@@ -13,12 +13,16 @@ class DatabaseSeeder extends Seeder
     {
         // ユーザーを100人作成
         User::factory(100)->create()->each(function ($user) {
-            // 各ユーザーに対して出勤記録を作成
-            $attendances = Attendance::factory(5)->create(['user_id' => $user->id]);
+            // 各ユーザーに対してランダムに0から5個の出勤記録を作成
+            $numAttendances = rand(0, 5); // 0から5までのランダムな整数を生成
+            $attendances = Attendance::factory($numAttendances)->create(['user_id' => $user->id]);
 
-            // 各出勤記録に対して休憩を作成
+            // 各出勤記録に対して休憩を生成（０個または１個）
             $attendances->each(function ($attendance) {
-                Rest::factory(3)->create(['attendance_id' => $attendance->id]);
+                // 0または1をランダムに生成
+                if (rand(0, 1)) {
+                    Rest::factory()->create(['attendance_id' => $attendance->id]);
+                }
             });
         });
     }
