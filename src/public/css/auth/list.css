@@ -1,0 +1,35 @@
+.date-nav {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 1.2em;
+  margin: 0 10px;
+}
+.date-nav:hover {
+  text-decoration: underline;
+}
+
+table {
+  border-collapse: collapse;
+  width: 80%;
+  margin: 0 10%;
+}
+
+thead th:first-child {
+  width: 300px; /* 幅を固定（必要に応じて調整） */
+}
+
+tbody {
+  background-color: transparent; /* 背景色をなしに設定 */
+}
+
+table th, table td {
+  border-top: 1px solid #ccc; /* 行の下側に区切り線を追加 */
+  padding: 20px 20px;
+
+  text-align: left;
+  font-weight: bold;
+
+  font-size: 16px;
+
+  background-color: transparent; /* 背景色をなしに設定 */
+}

@@ -1,0 +1,130 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.header {
+  width: 100%;
+  max-width: 100%;
+  /* 最大幅を制限しない */
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__heading {
+  margin: 0 200px;
+}
+
+.header__heading a {
+  font-weight: bold;
+  font-size: 32px;
+  margin-left: 10%;
+  text-decoration: none; /* リンクの下線を削除 */
+  color: inherit; /* 親要素の色を継承 */
+}
+
+
+.header__nav {
+  margin-right: 100px;
+  list-style: none;
+  padding: 0;
+  text-align: right;
+  display: flex;
+}
+
+.header__nav a {
+  margin: 0 25px;
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+body {
+  width: 100%;
+  /* 画面幅いっぱいにする */
+
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app h1  {
+  padding: 50px 0;
+}
+
+.app__form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 子要素を中央に揃える */
+}
+
+input {
+  width: 360px;
+  height: 40px;
+  margin: 20px 0;
+  padding: 0 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: solid 1px gray;
+  border-radius: 2px;
+  background: transparent;
+}
+
+::placeholder {
+  color: gray;
+  padding: 5px;
+}
+
+button {
+  width: 360px;
+  height: 40px;
+  margin: 20px 0;
+  align-items: center;
+  border-radius: 2px;
+  color: white;
+  background-color: blue;
+}
+
+p.submit__explain {
+  color: gray;
+  text-align: center;
+}
+
+a.submit__login {
+  display: flex;
+  color: blue;
+  justify-content: center;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.footer {
+  position: fixed;
+  margin-top: auto;
+  bottom: 0;
+  padding: 20px;
+  text-align: center;
+  color: #000;
+  font-weight: bold;
+  background-color: #fff;
+  width: 100%;
+  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
+}

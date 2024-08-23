@@ -1,28 +1,29 @@
-<!-- resources/views/auth/login.blade.php -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
+@extends('layouts.app')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/auth/register.css')}}">
+@endsection
 
-        <label for="email">Email</label>
-        <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
-        @error('email')
+@section('content')
+<div class="app">
+    <h1>ログイン</h1>
+    <div class="app__form">
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="メールアドレス" required autofocus>
+            @error('email')
             <span>{{ $message }}</span>
-        @enderror
+            @enderror
 
-        <label for="password">Password</label>
-        <input id="password" type="password" name="password" required>
-        @error('password')
+            <input id="password" type="password" name="password" placeholder="パスワード" required>
+            @error('password')
             <span>{{ $message }}</span>
-        @enderror
+            @enderror
+            <button type="submit">ログイン</button>
 
-        <button type="submit">Login</button>
-    </form>
-</body>
-</html>
+            <p class="submit__explain">アカウントをお持ちでない方こちらから</p>
+            <a class="submit__login" href="{{ route('register') }}">会員登録</a>
+        </form>
+    </div>
+</div>
+@endsection

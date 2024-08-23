@@ -1,37 +1,38 @@
-<!-- resources/views/auth/register.blade.php -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
-    <h1>Register</h1>
+@extends('layouts.app')
 
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/auth/register.css')}}">
+@endsection
 
-        <label for="name">Name</label>
-        <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
-        @error('name')
+@section('content')
+<div class="app">
+    <h1>会員登録</h1>
+    <div class="app__form">
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
+            <input type="text" name="name" value="{{ old('name') }}" placeholder="名前" autofocus>
+            @error('name')
             <span>{{ $message }}</span>
-        @enderror
+            @enderror
 
-        <label for="email">Email</label>
-        <input id="email" type="email" name="email" value="{{ old('email') }}" required>
-        @error('email')
+            <input type="email" name="email" value="{{ old('email') }}" placeholder="メールアドレス">
+            @error('email')
             <span>{{ $message }}</span>
-        @enderror
+            @enderror
 
-        <label for="password">Password</label>
-        <input id="password" type="password" name="password" required>
-        @error('password')
+            <input type="password" name="password" placeholder="パスワード">
+            @error('password')
             <span>{{ $message }}</span>
-        @enderror
+            @enderror
 
-        <label for="password_confirmation">Confirm Password</label>
-        <input id="password_confirmation" type="password" name="password_confirmation" required>
+            <input type="password" name="password_confirmation" placeholder="確認用メールアドレス">
 
-        <button type="submit">Register</button>
-    </form>
-</body>
-</html>
+            <button type="submit">会員登録</button>
+
+            <p class="submit__explain">アカウントをお持ちの方こちらから</p>
+            <a class="submit__login" href="{{ route('login') }}">ログイン</a>
+        </form>
+    </div>
+</div>
+
+@endsection('content')
