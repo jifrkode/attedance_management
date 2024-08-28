@@ -11,10 +11,6 @@
 休憩開始/休憩終了
 日付別勤怠情報取得して表示
 
-## テーブル
-![image](https://github.com/user-attachments/assets/99097325-c73f-451d-be77-3c2bb7878626)
-
-
 ## 環境構築
 Dockerビルド
 1. git clone リンク
@@ -37,4 +33,7 @@ Laravel環境構築
 * phpMyadmin：http://localhost:8080/
 ## ER図
 ![erd](https://github.com/user-attachments/assets/bd941f94-0b65-44d5-941e-36f196b99572)
+
+## テーブル
+![image](https://github.com/user-attachments/assets/99097325-c73f-451d-be77-3c2bb7878626)
 
