@@ -1,21 +1,22 @@
 # 勤怠管理システム
 
 ## 作成目的
-
+勤怠管理システム作成
 ## アプリケーションのURL
 
 ## 機能一覧
-会員登録
-ログイン/ログアウト
-勤務開始/勤務終了
-休憩開始/休憩終了
-日付別勤怠情報取得して表示
+1. 会員登録
+2. ログイン/ログアウト
+3. 勤務開始/勤務終了
+4. 休憩開始/休憩終了
+5. 日付別勤怠情報取得して表示
 
 ## 環境構築
 Dockerビルド
-1. git clone リンク
+1. git clone https://github.com/jifrkode/attedance_management.git
 2. docker-compose up-d --build
 ＊MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
+
 Laravel環境構築
 1. docker-compose exec php bash
 2. composer install
