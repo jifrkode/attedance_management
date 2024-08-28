@@ -19,10 +19,12 @@ Dockerビルド
 Laravel環境構築
 1. docker-compose exec php bash
 2. composer install
-3. .env.exampleファイルから.envを作成し、環境変数を変更
+3. .env.exampleファイルから.envを作成し、環境変数を変更、
+   ＊Gメールでの送信設定は以下参照し、アプリパスワードを発行
+   https://support.google.com/accounts/answer/185833?hl=ja
 4. php artisan key:generate
-5. php artisan migrate
-6. php artisan db:seed
+5. php artisan migrate --seed
+
 # 使用技術
 <!-- ((例) Laravel 8.x(言語やフレームワーク、バージョンなどが記載されていると良い)) -->
 * PHP 7.4.9
