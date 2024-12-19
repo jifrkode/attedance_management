@@ -16,15 +16,13 @@ class Attendance extends Model
         'end_time',
     ];
 
-    // Attendance.php
+    // Restとのリレーションシップ
     public function rests()
     {
         return $this->hasMany(Rest::class, 'attendance_id'); // 'attendance_id' は外部キー
     }
 
-    /**
-     * ユーザーへのリレーションシップ
-     */
+    // Userへのリレーションシップ
     public function user()
     {
         return $this->belongsTo(User::class);

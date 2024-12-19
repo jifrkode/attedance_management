@@ -6,7 +6,8 @@
     }
 
     .pagination {
-        list-style-type: none; /* 黒丸を非表示にする */
+        list-style-type: none;
+        /* 黒丸を非表示にする */
         padding: 0;
         margin: 20px;
         display: flex;
@@ -16,11 +17,14 @@
         margin: 0 3px;
     }
 
-    .pagination li a, .pagination li span {
+    .pagination li a,
+    .pagination li span {
         padding: 8px 12px;
         text-decoration: none;
-        color: #007bff; /* リンク色 */
-        border: 1px solid #dee2e6; /* 枠線 */
+        color: #007bff;
+        /* リンク色 */
+        border: 1px solid #dee2e6;
+        /* 枠線 */
         border-radius: 4px;
     }
 
@@ -37,29 +41,29 @@
 
 </style>
 
-@if ($paginator->hasPages())
+<!-- 日付を引き継ぐ &date={{ request()->date }} -->
 <ul class="pagination">
     {{-- Previous Page Link --}}
     @if ($paginator->onFirstPage())
-    <li class="disabled"><span>&laquo;</span></li>
+    <li class="pagination-item disabled"><span>&laquo;</span></li>
     @else
-    <li><a href="{{ $paginator->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+    <li class="pagination-item"><a href="{{ $paginator->previousPageUrl() }}&date={{ request()->date }}" rel="prev">&laquo;</a></li>
     @endif
 
     {{-- Pagination Elements --}}
     @foreach ($elements as $element)
     {{-- "Three Dots" Separator --}}
     @if (is_string($element))
-    <li class="disabled"><span>{{ $element }}</span></li>
+    <li class="pagination-item disabled"><span>{{ $element }}</span></li>
     @endif
 
     {{-- Array Of Links --}}
     @if (is_array($element))
     @foreach ($element as $page => $url)
     @if ($page == $paginator->currentPage())
-    <li class="active"><span>{{ $page }}</span></li>
+    <li class="pagination-item active"><span>{{ $page }}</span></li>
     @else
-    <li><a href="{{ $url }}">{{ $page }}</a></li>
+    <li class="pagination-item"><a href="{{ $url }}&date={{ request()->date }}">{{ $page }}</a></li>
     @endif
     @endforeach
     @endif
@@ -67,9 +71,8 @@
 
     {{-- Next Page Link --}}
     @if ($paginator->hasMorePages())
-    <li><a href="{{ $paginator->nextPageUrl() }}" rel="next">&raquo;</a></li>
+    <li class="pagination-item"><a href="{{ $paginator->nextPageUrl() }}&date={{ request()->date }}" rel="next">&raquo;</a></li>
     @else
-    <li class="disabled"><span>&raquo;</span></li>
+    <li class="pagination-item disabled"><span>&raquo;</span></li>
     @endif
 </ul>
-@endif

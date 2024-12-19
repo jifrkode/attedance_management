@@ -15,6 +15,7 @@ class Rest extends Model
         'end_time',
     ];
 
+    // Attendanceへのリレーションシップ
     public function attendance()
     {
         return $this->belongsTo(Attendance::class, 'attendance_id');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,16 +14,20 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
+        // バリデーション済みのメアドとパスワードのデータを取得
         $credentials = $request->only('email', 'password');
 
+        // 認証を試みる
         if (Auth::attempt($credentials)) {
+            // 認証成功時にリダイレクト
             return redirect()->intended('attendance');
         }
 
+        // 認証失敗時にエラーメッセージを渡してリダイレクト
         return redirect()->back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'ログインに失敗しました。',
         ]);
     }
 

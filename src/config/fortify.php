@@ -154,6 +154,7 @@ return [
             'confirm' => true,
             'confirmPassword' => true,
             // 'window' => 0,
+        Features::emailVerification(), // メール認証を有効にする
         ]),
     ],
 

@@ -3,9 +3,11 @@
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\MailTestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\VerificationController;
 
 // ホームページルート
 Route::get('/', function () {
@@ -19,6 +21,13 @@ Route::get('/', function () {
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
+Route::middleware('auth')->group(function () {
+    // メール認証確認用ルート
+    Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
+    Route::post('/email/resend', [VerificationController::class, 'resend'])->middleware('throttle:6,1')->name('verification.resend');
+});
+
 // ログインページ
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
@@ -30,8 +39,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::middleware(['auth', 'can:manage-users'])->group(function () {
-        Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list'); 
+        Route::get('/attendance/usesrlist', [AttendanceController::class, 'userslist'])->name('attendance.userslist'); 
     });
+    Route::get('/attendance/dayslist', [AttendanceController::class, 'dayslist'])->name('attendance.dayslist'); 
     Route::post('/attendance/start', [AttendanceController::class, 'start'])->name('attendance.start');
     Route::post('/attendance/end', [AttendanceController::class, 'end'])->name('attendance.end');
     Route::post('/attendance/break/start', [AttendanceController::class, 'startBreak'])->name('attendance.startBreak');
@@ -40,9 +50,12 @@ Route::middleware('auth')->group(function () {
 });
 
 // ユーザーページ（権限のあるユーザーのみアクセス可能）
-Route::middleware(['auth', 'can:manage-users'])->group(function () {
-    Route::get('/users', [UserController::class, 'index'])->name('users.admin');
-    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
-});
+// Route::middleware(['auth', 'can:manage-users'])->group(function () {
+//     Route::get('/users', [UserController::class, 'index'])->name('users.admin');
+//     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+// });
 
-Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
+// Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.dayslist');
+
+// テストメール送信
+Route::get('/send-test-email', [MailTestController::class, 'sendTestEmail']);

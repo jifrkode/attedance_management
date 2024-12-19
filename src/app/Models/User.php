@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 
+
 class User extends Authenticatable implements MustVerifyEmailContract
 {
     use HasFactory, Notifiable;
@@ -21,6 +22,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'email',
         'password',
         'role',
+        'workstatus',
+        'reststatus'
     ];
 
     /**
@@ -42,11 +45,31 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * Get the attendances for the user.
-     */
+    // Attendanceとのリレーションシップ
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    //勤務状況の管理
+    public function getWorkstatusAttribute($value)
+    {
+        return (bool) $value;
+    }
+
+    public function getReststatusAttribute($value)
+    {
+        return (bool) $value;
+    }
+
+    // ミューテータ
+    public function setWorkstatusAttribute($value)
+    {
+        $this->attributes['workstatus'] = (bool) $value;
+    }
+
+    public function setReststatusAttribute($value)
+    {
+        $this->attributes['reststatus'] = (bool) $value;
     }
 }

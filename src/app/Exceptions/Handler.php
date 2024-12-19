@@ -38,4 +38,14 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    // app/Exceptions/Handler.php
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
+            return response()->view('errors.403', [], 403);
+        }
+
+        return parent::render($request, $exception);
+    }
 }

@@ -1,9 +1,13 @@
 .date-nav {
+  border: 1px solid #007bff;
+  background-color: white;
   text-decoration: none;
   color: #007bff;
-  font-size: 1.2em;
+  font-size: 0.8em;
+  padding: 0 10px;
   margin: 0 10px;
 }
+
 .date-nav:hover {
   text-decoration: underline;
 }

@@ -8,7 +8,13 @@
 <nav>
     <ul class="header__nav">
         <li><a href="{{ route('attendance.index') }}">ホーム</a></li>
-        <li><a href="{{ route('users.admin') }}">日付一覧</a></li>
+        <li><a href="{{ route('attendance.list') }}">日付一覧</a></li>
+        @php
+        $userRole = auth()->user()->role; // 現在のユーザーのロールを取得
+        @endphp
+        @if ($userRole === 'admin')
+        <li><a href="{{ route('attendance.index') }}">勤務者一覧</a></li>
+        @endif
         <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a></li>
     </ul>
     <!-- ログアウト用のフォーム -->
