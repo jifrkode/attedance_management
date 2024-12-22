@@ -61,7 +61,19 @@ Route::middleware('auth')->group(function () {
 // テストメール送信
 Route::get('/send-test-email', [MailTestController::class, 'sendTestEmail']);
 
+//本番デバック用
 Route::get('/db-check', function () {
-    $tables = DB::select('SHOW TABLES');
-    return response()->json($tables);
+    try {
+        $tables = DB::select('SHOW TABLES');
+        DB::table('users')->truncate();
+
+        return response()->json($tables);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()]);
+    }
+});
+
+Route::get('/users', function () {
+    $users = DB::table('users')->get();
+    return response()->json($users);
 });
