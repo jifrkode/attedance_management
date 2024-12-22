@@ -23,7 +23,8 @@
                 @enderror
             </div>
             <div class="app__form--item">
-                <input type="password" name="password" placeholder="パスワード">
+                <input type="password" name="password" placeholder="パスワード" autocomplete="new-password">
+
                 @error('password')
                 <span>{{ $message }}</span>
                 @enderror
@@ -42,4 +43,4 @@
     <a class="submit__login" href="{{ route('login') }}">ログイン</a>
 </div>
 
-@endsection('content')
+@endsection
