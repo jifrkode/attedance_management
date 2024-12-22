@@ -62,20 +62,20 @@ Route::middleware('auth')->group(function () {
 Route::get('/send-test-email', [MailTestController::class, 'sendTestEmail']);
 
 //本番デバック用
-Route::get('/db-check', function () {
-    try {
-        $tables = DB::select('SHOW TABLES');
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;'); // 外部キー制約を無効化
-        DB::table('users')->truncate();           // users テーブルのデータを削除
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;'); // 外部キー制約を再有効化
+// Route::get('/db-check', function () {
+//     try {
+//         $tables = DB::select('SHOW TABLES');
+//         DB::statement('SET FOREIGN_KEY_CHECKS=0;'); // 外部キー制約を無効化
+//         DB::table('users')->truncate();           // users テーブルのデータを削除
+//         DB::statement('SET FOREIGN_KEY_CHECKS=1;'); // 外部キー制約を再有効化
 
-        return response()->json($tables);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()]);
-    }
-});
+//         return response()->json($tables);
+//     } catch (\Exception $e) {
+//         return response()->json(['error' => $e->getMessage()]);
+//     }
+// });
 
-Route::get('/users', function () {
-    $users = DB::table('users')->get();
-    return response()->json($users);
-});
+// Route::get('/users', function () {
+//     $users = DB::table('users')->get();
+//     return response()->json($users);
+// });
