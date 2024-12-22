@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\VerificationController;
+use Illuminate\Support\Facades\DB;
 
 // ホームページルート
 Route::get('/', function () {
@@ -59,3 +60,8 @@ Route::middleware('auth')->group(function () {
 
 // テストメール送信
 Route::get('/send-test-email', [MailTestController::class, 'sendTestEmail']);
+
+Route::get('/db-check', function () {
+    $tables = DB::select('SHOW TABLES');
+    return response()->json($tables);
+});
