@@ -29,7 +29,7 @@
                 @enderror
             </div>
             <div class="app__form--item">
-                <input type="password" name="password_confirmation" placeholder="確認用メールアドレス">
+                <input type="email" name="password_confirmation" placeholder="確認用メールアドレス">
                 @error('password_confirmation')
                 <span>{{ $message }}</span>
                 @enderror
