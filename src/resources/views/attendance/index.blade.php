@@ -32,10 +32,12 @@
 @php
 use App\Models\Attendance;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 // 現在のログインユーザーを取得
 $user = Auth::user();
 
+// 勤務状態と休憩状態を取得（nullの場合はfalseを設定）
 $workStatus = $user->workstatus ?? false;
 $restStatus = $user->reststatus ?? false;
 
@@ -44,39 +46,42 @@ $today = Carbon::today()->toDateString();
 
 // 今日の日付の出勤レコードを確認
 $hasAttendanceToday = Attendance::where('user_id', $user->id)
-->whereDate('date', $today)
-->exists();
+    ->whereDate('date', $today)
+    ->exists();
 
-// 今日の出勤記録がない場合はすべてのクラスを 'notavailable' に設定
-if ($hasAttendanceToday === true) {
+// ボタンの初期クラスを設定
 $startWorkClass = 'notavailable';
 $endWorkClass = 'notavailable';
 $startBreakClass = 'notavailable';
 $endBreakClass = 'notavailable';
+
+// 今日の出勤記録がない場合（初回勤務開始が可能）
+if (!$hasAttendanceToday) {
+    $startWorkClass = 'available';
 } else {
-$startWorkClass = (!$workStatus && !$restStatus)
-? 'available'
-: 'notavailable';
-
-$endWorkClass = ($workStatus && !$restStatus)
-? 'available'
-: 'notavailable';
-
-$startBreakClass = ($workStatus && !$restStatus)
-? 'available'
-: 'notavailable';
-
-$endBreakClass = ($workStatus && $restStatus)
-? 'available'
-: 'notavailable';
-
-// 勤務中でない場合は、休憩関連のクラスを 'notavailable' に設定
-if (!$workStatus) {
-$startBreakClass = 'notavailable';
-$endBreakClass = 'notavailable';
+    // 勤務中の状態によるボタンの制御
+    if ($workStatus && !$restStatus) {
+        // 勤務中で休憩していない場合
+        $endWorkClass = 'available';
+        $startBreakClass = 'available';
+    } elseif ($workStatus && $restStatus) {
+        // 勤務中で休憩中の場合
+        $endWorkClass = 'available';
+        $endBreakClass = 'available';
+    } else {
+        // 勤務が終了している場合
+        $startWorkClass = 'available';
+    }
 }
+
+// 勤務中でない場合は休憩関連のクラスを無効化
+if (!$workStatus) {
+    $startBreakClass = 'notavailable';
+    $endBreakClass = 'notavailable';
 }
 @endphp
+
+
 <!-- dd($startWorkClass,$endWorkClass,$startBreakClass,$endBreakClass); -->
 
 

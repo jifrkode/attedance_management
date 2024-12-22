@@ -30,7 +30,9 @@
   <h1>
     <a href="{{ route('attendance.dayslist', ['date' => $previousDate]) }}" class="date-nav"><</a>
     {{ $date }}
-    <a href="{{ route('attendance.dayslist', ['date' => $nextDate]) }}" class="date-nav">></a>
+    @if (isset($nextDate) && $nextDate <= \Carbon\Carbon::today()->toDateString())
+      <a href="{{ route('attendance.dayslist', ['date' => $nextDate]) }}" class="date-nav">></a>
+    @endif
   </h1>
 
   <!-- 日付選択フォーム -->

@@ -15,7 +15,7 @@
 <!-- 共通ヘッダーおよびコンテンツ -->
 <header class="header">
   <h1 class="header__heading">
-    <a href="{{ route('login') }}">Atte</a>
+    <a href="{{ Auth::check() ? route('attendance.index') : route('login') }}">Atte</a>
   </h1>
   @yield('link')
 </header>
