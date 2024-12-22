@@ -40,9 +40,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::middleware(['auth', 'can:manage-users'])->group(function () {
-        Route::get('/attendance/usesrlist', [AttendanceController::class, 'userslist'])->name('attendance.userslist'); 
+        Route::get('/attendance/usesrlist', [AttendanceController::class, 'userslist'])->name('attendance.userslist');
     });
-    Route::get('/attendance/dayslist', [AttendanceController::class, 'dayslist'])->name('attendance.dayslist'); 
+    Route::get('/attendance/dayslist', [AttendanceController::class, 'dayslist'])->name('attendance.dayslist');
     Route::post('/attendance/start', [AttendanceController::class, 'start'])->name('attendance.start');
     Route::post('/attendance/end', [AttendanceController::class, 'end'])->name('attendance.end');
     Route::post('/attendance/break/start', [AttendanceController::class, 'startBreak'])->name('attendance.startBreak');
@@ -65,7 +65,9 @@ Route::get('/send-test-email', [MailTestController::class, 'sendTestEmail']);
 Route::get('/db-check', function () {
     try {
         $tables = DB::select('SHOW TABLES');
-        DB::table('users')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;'); // 外部キー制約を無効化
+        DB::table('users')->truncate();           // users テーブルのデータを削除
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;'); // 外部キー制約を再有効化
 
         return response()->json($tables);
     } catch (\Exception $e) {
