@@ -21,6 +21,18 @@ class LoginController extends Controller
 
         // 認証を試みる
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            // ユーザーが MustVerifyEmail を実装していて、認証されていない場合
+            if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail()) {
+                Auth::logout(); // ログアウト
+
+                // メール認証ページにリダイレクト
+                return redirect()->route('verification.notice')->withErrors([
+                    'email' => 'メールアドレスが未確認です。認証メールをご確認ください。',
+                ]);
+            }
+
             // 認証成功時にリダイレクト
             return redirect()->intended('attendance');
         }

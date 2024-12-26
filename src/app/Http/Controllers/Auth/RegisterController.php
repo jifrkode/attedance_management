@@ -28,7 +28,7 @@ class RegisterController extends Controller
                 $user->sendEmailVerificationNotification();
             }
 
-            return redirect()->intended('attendance')->with('success', '登録が完了しました。');
+            return redirect()->route('email.sent')->with('success', '二段階認証メールを送信しました。');
         } catch (\Exception $e) {
             Log::error('Registration failed: ' . $e->getMessage());
             return redirect()->back()->withErrors(['error' => '登録中に問題が発生しました。もう一度お試しください。']);

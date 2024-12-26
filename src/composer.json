@@ -9,14 +9,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "ext-mbstring": "*",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/fortify": "^1.19",
-        "laravel/framework": "^9.0",
+        "laravel/framework": "^8.83",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "nesbot/carbon": "^2.72",
-        "ext-mbstring": "*"
+        "laravel/ui": "^3.4",
+        "nesbot/carbon": "^2.72"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

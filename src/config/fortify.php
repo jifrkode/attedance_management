@@ -144,18 +144,18 @@ return [
     |
     */
 
-    'features' => [
-        Features::registration(),
-        Features::resetPasswords(),
-        // Features::emailVerification(),
-        Features::updateProfileInformation(),
-        Features::updatePasswords(),
-        Features::twoFactorAuthentication([
-            'confirm' => true,
-            'confirmPassword' => true,
-            // 'window' => 0,
-        Features::emailVerification(), // メール認証を有効にする
-        ]),
-    ],
+'features' => [
+    Features::registration(),
+    Features::resetPasswords(),
+    Features::updateProfileInformation(),
+    Features::updatePasswords(),
+    Features::twoFactorAuthentication([
+        'confirm' => true,
+        'confirmPassword' => true,
+        // 'window' => 0, // 必要に応じて有効化
+    ]),
+    Features::emailVerification(), // メール認証を有効にする
+],
+
 
 ];

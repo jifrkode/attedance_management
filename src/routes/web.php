@@ -29,9 +29,30 @@ Route::middleware('auth')->group(function () {
     Route::post('/email/resend', [VerificationController::class, 'resend'])->middleware('throttle:6,1')->name('verification.resend');
 });
 
+Route::get('/email-sent', function () {
+    return view('auth.email-sent');
+})->name('email.sent');
+
 // ログインページ
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
+Route::middleware(['auth', 'verified'])->group(function () {
+    // 認証済みユーザーのみがアクセスできるルート
+    Route::get('/attendance', function () {
+        return view('attendance.index');
+    })->name('attendance');
+});
+
+// メール認証用ルート
+Route::middleware(['auth'])->group(function () {
+    Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+        ->middleware(['signed'])->name('verification.verify');
+    Route::post('/email/resend', [VerificationController::class, 'resend'])
+        ->middleware(['throttle:6,1'])->name('verification.resend');
+        
+});
+
 
 // ログアウト処理
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -59,7 +80,7 @@ Route::middleware('auth')->group(function () {
 // Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.dayslist');
 
 // テストメール送信
-Route::get('/send-test-email', [MailTestController::class, 'sendTestEmail']);
+// Route::get('/send-test-email', [MailTestController::class, 'sendTestEmail']);
 
 //本番デバック用
 // Route::get('/db-check', function () {
