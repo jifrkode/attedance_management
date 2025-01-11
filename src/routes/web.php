@@ -20,7 +20,6 @@ Route::get('/', function () {
 
 // 会員登録ページ
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
 
 Route::middleware('auth')->group(function () {
     // メール認証確認用ルート
@@ -32,6 +31,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/email-sent', function () {
     return view('auth.email-sent');
 })->name('email.sent');
+Route::post('/register', [RegisterController::class, 'register']);
 
 // ログインページ
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
