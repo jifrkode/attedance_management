@@ -41,9 +41,8 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
         // Send email verification notification if the user implements MustVerifyEmail
-        if ($user instanceof MustVerifyEmail) {
-            $user->sendEmailVerificationNotification();
-        }
+        $user->sendEmailVerificationNotification();
+
 
         // Log the user creation
         Log::info('User created: ' . $user->email);
