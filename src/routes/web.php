@@ -4,6 +4,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\MailTestController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,6 +31,8 @@ Route::middleware('auth')->group(function () {
 
 // メール送信確認画面
 Route::get('/email-sent', fn() => view('auth.email-sent'))->name('email.sent');
+// メールテスト
+Route::get('/email-test', [MailTestController::class, 'sendTestEmail'])->name('sendTestEmail');
 
 // 勤怠管理ルート
 Route::middleware('auth')->prefix('attendance')->name('attendance.')->group(function () {
