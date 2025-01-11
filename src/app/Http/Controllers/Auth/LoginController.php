@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
+    protected $redirectTo = '/attendance';
+
     public function showLoginForm()
     {
         return view('auth.login');
@@ -16,28 +19,23 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        // バリデーション済みのメアドとパスワードのデータを取得
         $credentials = $request->only('email', 'password');
 
-        // 認証を試みる
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            // ユーザーが MustVerifyEmail を実装していて、認証されていない場合
             if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail()) {
-                Auth::logout(); // ログアウト
-
-                // メール認証ページにリダイレクト
+                Auth::logout();
                 return redirect()->route('verification.notice')->withErrors([
                     'email' => 'メールアドレスが未確認です。認証メールをご確認ください。',
                 ]);
             }
 
-            // 認証成功時にリダイレクト
-            return redirect()->intended('attendance');
+            Log::info('User logged in successfully.', ['user_id' => $user->id]);
+            return redirect()->intended($this->redirectTo);
         }
 
-        // 認証失敗時にエラーメッセージを渡してリダイレクト
+        Log::warning('Failed login attempt.', ['email' => $request->email]);
         return redirect()->back()->withErrors([
             'email' => 'ログインに失敗しました。',
         ]);
@@ -49,6 +47,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect(env('LOGOUT_REDIRECT', '/'));
     }
 }
