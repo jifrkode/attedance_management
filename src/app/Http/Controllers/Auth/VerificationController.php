@@ -42,8 +42,6 @@ class VerificationController extends Controller
 
         $user->sendEmailVerificationNotification();
         Log::info('After markEmailAsVerified', ['email_verified_at' => $user->email_verified_at]);
-
-
         return Redirect::route('verification.notice')->with('status', '認証メールを再送信しました。');
     }
 }

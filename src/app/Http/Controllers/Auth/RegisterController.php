@@ -25,7 +25,9 @@ class RegisterController extends Controller
             $user = $this->create($validated);
 
             if ($user instanceof MustVerifyEmail) {
+                Log::info('User is an instance of MustVerifyEmail.', ['email' => $user->email]);
                 $user->sendEmailVerificationNotification();
+                Log::info('Email verification notification sent.');
             }
 
             return redirect()->route('email.sent')->with('success', '二段階認証メールを送信しました。');
