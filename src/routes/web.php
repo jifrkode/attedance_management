@@ -33,6 +33,12 @@ Route::middleware('auth')->group(function () {
 Route::get('/email-sent', fn() => view('auth.email-sent'))->name('email.sent');
 // メールテスト
 Route::get('/email-test', [VerificationController::class, 'show'])->name('verification.notice');
+Route::get('/test-email', function () {
+    $user = App\Models\User::first();
+    $user->sendEmailVerificationNotification();
+
+    return 'Test email sent!';
+});
 // Route::get('/email-test', [MailTestController::class, 'sendTestEmail'])->name('sendTestEmail');
 
 // 勤怠管理ルート
