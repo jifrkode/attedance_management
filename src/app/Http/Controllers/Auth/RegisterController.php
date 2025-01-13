@@ -18,6 +18,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
+        Log::info('登録表示');
         return view('auth.register');
     }
 

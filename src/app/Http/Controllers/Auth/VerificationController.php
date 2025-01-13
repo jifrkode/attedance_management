@@ -25,7 +25,7 @@ class VerificationController extends Controller
         if ($user->hasVerifiedEmail()) {
             return Redirect::route('home')->with('status', 'メールはすでに認証済みです。');
         }
-
+        Log::info('認証開始');
         // email_verified_at を更新
         $user->markEmailAsVerified();
 
