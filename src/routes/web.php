@@ -23,16 +23,15 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // メール認証
-Route::middleware('auth')->group(function () {
-    Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
-    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
-    Route::post('/email/resend', [VerificationController::class, 'resend'])->middleware('throttle:6,1')->name('verification.resend');
-});
+
+Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
+Route::post('/email/resend', [VerificationController::class, 'resend'])->middleware('throttle:6,1')->name('verification.resend');
 
 // メール送信確認画面
 Route::get('/email-sent', fn() => view('auth.email-sent'))->name('email.sent');
 // メールテスト
-// Route::get('/email-test', [VerificationController::class, 'show'])->name('verification.notice');
+Route::get('/email-test', [VerificationController::class, 'show'])->name('verification.notice');
 // Route::get('/test-email', function () {
 //     $user = App\Models\User::first();
 //     $user->sendEmailVerificationNotification();

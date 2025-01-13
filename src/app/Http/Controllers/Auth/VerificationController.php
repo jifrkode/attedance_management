@@ -38,7 +38,7 @@ class VerificationController extends Controller
         $user = $request->user();
 
         if ($user->hasVerifiedEmail()) {
-            return Redirect::route('home')->with('status', 'すでに認証済みです。');
+            return Redirect::route('login')->with('status', 'すでに認証済みです。');
         }
 
         $user->sendEmailVerificationNotification();
