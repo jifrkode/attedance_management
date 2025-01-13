@@ -3,6 +3,8 @@
 namespace Illuminate\Auth;
 
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Log;
+
 
 trait MustVerifyEmail
 {
@@ -23,6 +25,7 @@ trait MustVerifyEmail
      */
     public function markEmailAsVerified()
     {
+        Log::info('Fresh timestamp:', ['timestamp' => $this->freshTimestamp()]);
         return $this->forceFill([
             'email_verified_at' => $this->freshTimestamp(),
         ])->save();

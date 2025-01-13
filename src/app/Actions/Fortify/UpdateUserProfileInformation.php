@@ -17,9 +17,9 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update(User $user, array $input): void
     {
-        Validator::make($input, [
+        // バリデーションの実行
+        $validator = Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-
             'email' => [
                 'required',
                 'string',
@@ -27,12 +27,20 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'max:255',
                 Rule::unique('users')->ignore($user->id),
             ],
-        ])->validateWithBag('updateProfileInformation');
+        ]);
 
+        // バリデーションエラーがあればエラーバッグを設定してリダイレクト
+        if ($validator->fails()) {
+            session()->flash('errorBag', 'updateProfileInformation');
+            throw new \Illuminate\Validation\ValidationException($validator);
+        }
+
+        // メールアドレスが変更された場合の処理
         if ($input['email'] !== $user->email &&
             $user instanceof MustVerifyEmail) {
             $this->updateVerifiedUser($user, $input);
         } else {
+            // ユーザー情報の更新
             $user->forceFill([
                 'name' => $input['name'],
                 'email' => $input['email'],
