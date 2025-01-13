@@ -19,6 +19,7 @@ class VerificationController extends Controller
     // 認証リンククリック時の処理
     public function verify(EmailVerificationRequest $request)
     {
+        Log::info('認証クリック');
         $user = $request->user();
 
         if ($user->hasVerifiedEmail()) {
