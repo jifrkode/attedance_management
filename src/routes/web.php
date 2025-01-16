@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\MailTestController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\DebugController;
 
 // ホームページルート
 Route::get('/', function () {
@@ -54,4 +55,6 @@ Route::middleware('auth')->prefix('attendance')->name('attendance.')->group(func
     Route::middleware('can:manage-users')->group(function () {
         Route::get('/userlist', [AttendanceController::class, 'userslist'])->name('userslist');
     });
+
+    Route::get('/debug-email-verification', [DebugController::class, 'debugVerification']);
 });
