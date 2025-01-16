@@ -16,21 +16,26 @@ class VerificationController extends Controller
         return view('auth.verify-email');
     }
 
-    // 認証リンククリック時の処理
     public function verify(EmailVerificationRequest $request)
     {
         Log::info('認証クリック');
         $user = $request->user();
 
         if ($user->hasVerifiedEmail()) {
+            Log::info('既に認証済み', ['user_id' => $user->id]);
             return Redirect::route('home')->with('status', 'メールはすでに認証済みです。');
         }
-        Log::info('認証開始');
+
+        Log::info('認証開始', ['user_id' => $user->id]);
+
         // email_verified_at を更新
         $user->markEmailAsVerified();
 
+        Log::info('認証完了', ['email_verified_at' => $user->email_verified_at]);
+
         return Redirect::route('home')->with('status', 'メールアドレスが認証されました。');
     }
+
 
     // 認証メールの再送信
     public function resend(Request $request)
