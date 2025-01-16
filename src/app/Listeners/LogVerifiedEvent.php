@@ -5,7 +5,7 @@ namespace App\Listeners;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Log;
 
-class LogVerifiedUser
+class LogVerifiedEvent
 {
     /**
      * Handle the event.
@@ -13,11 +13,9 @@ class LogVerifiedUser
      * @param  \Illuminate\Auth\Events\Verified  $event
      * @return void
      */
-    public function handle(Verified $event)
+    public function handle($event)
     {
-        // ログにユーザー情報を出力
-        Log::info('User verified their email: ' . $event->user->email);
-
-        // 必要であれば追加の処理を記述
+        Log::info('Verified event triggered for user:', ['id' => $event->user->id]);
     }
+    
 }
