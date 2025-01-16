@@ -18,23 +18,27 @@ class VerificationController extends Controller
 
     public function verify(EmailVerificationRequest $request)
     {
-        Log::info('認証クリック');
-        $user = $request->user();
-
-        if ($user->hasVerifiedEmail()) {
-            Log::info('既に認証済み', ['user_id' => $user->id]);
-            return Redirect::route('home')->with('status', 'メールはすでに認証済みです。');
+        Log::info('Verification request received', [
+            'user_id' => $request->user()->id,
+            'verified' => $request->user()->hasVerifiedEmail(),
+        ]);
+    
+        if ($request->user()->hasVerifiedEmail()) {
+            Log::info('Already verified');
+            return redirect()->route('home')->with('status', 'Already verified');
         }
-
-        Log::info('認証開始', ['user_id' => $user->id]);
-
-        // email_verified_at を更新
-        $user->markEmailAsVerified();
-
-        Log::info('認証完了', ['email_verified_at' => $user->email_verified_at]);
-
-        return Redirect::route('home')->with('status', 'メールアドレスが認証されました。');
+    
+        Log::info('Marking email as verified');
+        $request->user()->markEmailAsVerified();
+    
+        Log::info('Verification completed', [
+            'user_id' => $request->user()->id,
+            'verified_at' => $request->user()->email_verified_at,
+        ]);
+    
+        return redirect()->route('home')->with('status', 'Email verified successfully');
     }
+    
 
 
     // 認証メールの再送信
