@@ -8,6 +8,7 @@ use App\Http\Controllers\MailTestController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DebugController;
+use Illuminate\Support\Facades\URL;
 
 // ホームページルート
 Route::get('/', function () {
@@ -56,5 +57,21 @@ Route::middleware('auth')->prefix('attendance')->name('attendance.')->group(func
         Route::get('/userlist', [AttendanceController::class, 'userslist'])->name('userslist');
     });
 
-    Route::get('/debug-email-verification', [DebugController::class, 'debugVerification']);
+    Route::get('/debug-email-verification', function () {
+        if (!Auth::check()) {
+            return response()->json(['error' => 'User not logged in'], 403);
+        }
+    
+        $user = Auth::user();
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        );
+    
+        return response()->json([
+            'debug' => 'メール認証URLを生成しました。',
+            'verification_url' => $verificationUrl,
+        ]);
+    });
 });
