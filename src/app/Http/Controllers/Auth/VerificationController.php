@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 class VerificationController extends Controller
 {
@@ -18,28 +19,33 @@ class VerificationController extends Controller
 
     public function verify(EmailVerificationRequest $request)
     {
-        Log::info('Verification request received', [
-            'user_id' => $request->user()->id,
-            'verified' => $request->user()->hasVerifiedEmail(),
-        ]);
-    
-        if ($request->user()->hasVerifiedEmail()) {
-            Log::info('Already verified');
-            return redirect()->route('home')->with('status', 'Already verified');
+        // リクエストからユーザーIDとハッシュを取得
+        $id = $request->route('id');
+        $hash = $request->route('hash');
+
+        // ユーザーを取得
+        $user = User::find($id);
+
+        if (!$user) {
+            // ユーザーが存在しない場合の処理
+            Log::error('User not found for verification:', ['id' => $id]);
+            return redirect('/login')->withErrors('Invalid verification link.');
         }
-    
-        Log::info('Marking email as verified');
+
+        // ハッシュを検証
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            // ハッシュが一致しない場合の処理
+            Log::error('Hash mismatch for verification:', ['id' => $id, 'hash' => $hash]);
+            return redirect('/login')->withErrors('Invalid verification link.');
+        }
+
+        // 認証を完了
         $request->fulfill();
-        $request->user()->markEmailAsVerified();
-    
-        Log::info('Verification completed', [
-            'user_id' => $request->user()->id,
-            'verified_at' => $request->user()->email_verified_at,
-        ]);
-    
-        return redirect()->route('home')->with('status', 'Email verified successfully');
+
+        // 成功メッセージを添えてリダイレクト
+        Log::info('Email verification completed for user:', ['id' => $id]);
+        return redirect('/dashboard')->with('message', 'Email verified successfully!');
     }
-    
 
 
     // 認証メールの再送信
