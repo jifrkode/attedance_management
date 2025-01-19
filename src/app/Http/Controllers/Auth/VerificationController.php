@@ -73,6 +73,7 @@ class VerificationController extends Controller
 
         $email = $request->input('email');
         $user = User::where('email', $email)->first();
+        Log::info('User not found for resend:', ['email' => $email]);
 
         if (!$user) {
             Log::error('User not found for resend:', ['email' => $email]);
