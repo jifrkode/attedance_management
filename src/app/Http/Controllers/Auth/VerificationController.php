@@ -73,7 +73,6 @@ class VerificationController extends Controller
 
         $email = $request->input('email');
         $user = User::where('email', $email)->first();
-        Log::info('User not found for resend:', ['email' => $email]);
 
         if (!$user) {
             Log::error('User not found for resend:', ['email' => $email]);
@@ -81,16 +80,13 @@ class VerificationController extends Controller
         }
 
         if ($user->hasVerifiedEmail()) {
-            Log::info('User already verified, no email sent:', ['email' => $email]);
+            Log::info('User already verified:', ['email' => $email]);
             return back()->with('status', 'すでに認証済みです。');
         }
 
         try {
-            // ログの追加
-            Log::info('Sending verification email:', ['email' => $email]);
-
+            Log::info('Attempting to send verification email:', ['email' => $email]);
             $user->sendEmailVerificationNotification();
-
             Log::info('Verification email sent successfully:', ['email' => $email]);
         } catch (\Exception $e) {
             Log::error('Failed to resend verification email:', [
@@ -100,6 +96,6 @@ class VerificationController extends Controller
             return back()->withErrors('認証メールの再送信に失敗しました。');
         }
 
-        return redirect('/login')->with('status', '認証メールを再送信しました。');
+        return back()->with('status', '認証メールを再送信しました。');
     }
 }
