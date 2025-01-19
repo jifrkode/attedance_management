@@ -65,39 +65,37 @@ class VerificationController extends Controller
         return redirect('/login')->with('message', 'Email verified successfully!');
     }
 
-    // 認証メールの再送信
     public function resend(Request $request)
     {
-        $user = $request->user();
-
-        Log::info('Resend request received:', [
-            'user_id' => $user->id,
-            'email_verified' => $user->hasVerifiedEmail(),
-            'email' => $user->email,
+        // メールアドレスのバリデーション
+        $request->validate([
+            'email' => 'required|email|exists:users,email', // 必須、メール形式、データベースに存在することを確認
         ]);
 
-        // ユーザーが既に認証済みの場合
+        // 入力されたメールアドレスを取得
+        $email = $request->input('email');
+
+        // ユーザーを検索
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            // ユーザーが見つからない場合
+            return back()->withErrors('このメールアドレスは登録されていません。');
+        }
+
         if ($user->hasVerifiedEmail()) {
-            Log::info('User already verified, no email sent:', [
-                'user_id' => $user->id,
-                'email_verified_at' => $user->email_verified_at,
-            ]);
-            return Redirect::route('login')->with('status', 'すでに認証済みです。');
+            // 既に認証済みの場合
+            return back()->with('status', 'このメールアドレスはすでに認証されています。');
         }
 
         try {
             // 認証メールを再送信
             $user->sendEmailVerificationNotification();
-            Log::info('Verification email resent successfully:', ['user_id' => $user->id]);
         } catch (\Exception $e) {
             // メール送信が失敗した場合
-            Log::error('Failed to resend verification email:', [
-                'user_id' => $user->id,
-                'error' => $e->getMessage(),
-            ]);
-            return Redirect::route('verification.notice')->withErrors('認証メールの再送信に失敗しました。もう一度お試しください。');
+            return back()->withErrors('認証メールの再送信に失敗しました。もう一度お試しください。');
         }
 
-        return Redirect::route('verification.notice')->with('status', '認証メールを再送信しました。');
+        return back()->with('status', '認証メールを再送信しました。');
     }
 }
