@@ -69,31 +69,34 @@ class VerificationController extends Controller
     {
         // メールアドレスのバリデーション
         $request->validate([
-            'email' => 'required|email|exists:users,email', // 必須、メール形式、データベースに存在することを確認
+            'email' => 'required|email|exists:users,email',
         ]);
 
-        // 入力されたメールアドレスを取得
         $email = $request->input('email');
 
         // ユーザーを検索
         $user = User::where('email', $email)->first();
 
         if (!$user) {
-            // ユーザーが見つからない場合
+            Log::error('User not found for resend:', ['email' => $email]);
             return back()->withErrors('このメールアドレスは登録されていません。');
         }
 
         if ($user->hasVerifiedEmail()) {
-            // 既に認証済みの場合
-            return back()->with('status', 'このメールアドレスはすでに認証されています。');
+            Log::info('User already verified, no email sent:', ['email' => $email]);
+            return back()->with('status', 'すでに認証済みです。');
         }
 
         try {
             // 認証メールを再送信
             $user->sendEmailVerificationNotification();
+            Log::info('Verification email resent successfully:', ['email' => $email]);
         } catch (\Exception $e) {
-            // メール送信が失敗した場合
-            return back()->withErrors('認証メールの再送信に失敗しました。もう一度お試しください。');
+            Log::error('Failed to resend verification email:', [
+                'email' => $email,
+                'error' => $e->getMessage(),
+            ]);
+            return back()->withErrors('認証メールの再送信に失敗しました。');
         }
 
         return back()->with('status', '認証メールを再送信しました。');
