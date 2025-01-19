@@ -29,6 +29,7 @@ class VerificationController extends Controller
         }
     
         Log::info('Marking email as verified');
+        $request->fulfill();
         $request->user()->markEmailAsVerified();
     
         Log::info('Verification completed', [
