@@ -11,6 +11,16 @@ use App\Http\Controllers\DebugController;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
 
+// デバック
+Route::middleware('auth')->get('/test-auth', function () {
+    return Auth::user() ? 'Authenticated' : 'Not authenticated';
+});
+Route::middleware('auth')->get('/test', function () {
+    return 'This route requires authentication.';
+});
+
+
+
 // ホームページルート
 Route::get('/', function () {
     return Auth::check()
