@@ -67,14 +67,11 @@ class VerificationController extends Controller
 
     public function resend(Request $request)
     {
-        // メールアドレスのバリデーション
         $request->validate([
             'email' => 'required|email|exists:users,email',
         ]);
 
         $email = $request->input('email');
-
-        // ユーザーを検索
         $user = User::where('email', $email)->first();
 
         if (!$user) {
@@ -88,9 +85,12 @@ class VerificationController extends Controller
         }
 
         try {
-            // 認証メールを再送信
+            // ログの追加
+            Log::info('Sending verification email:', ['email' => $email]);
+
             $user->sendEmailVerificationNotification();
-            Log::info('Verification email resent successfully:', ['email' => $email]);
+
+            Log::info('Verification email sent successfully:', ['email' => $email]);
         } catch (\Exception $e) {
             Log::error('Failed to resend verification email:', [
                 'email' => $email,
