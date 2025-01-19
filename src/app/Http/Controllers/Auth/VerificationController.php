@@ -99,6 +99,6 @@ class VerificationController extends Controller
             return back()->withErrors('認証メールの再送信に失敗しました。');
         }
 
-        return back()->with('status', '認証メールを再送信しました。');
+        return redirect('/login')->with('status', '認証メールを再送信しました。');
     }
 }
