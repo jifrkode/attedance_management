@@ -70,12 +70,34 @@ class VerificationController extends Controller
     {
         $user = $request->user();
 
+        Log::info('Resend request received:', [
+            'user_id' => $user->id,
+            'email_verified' => $user->hasVerifiedEmail(),
+            'email' => $user->email,
+        ]);
+
+        // ユーザーが既に認証済みの場合
         if ($user->hasVerifiedEmail()) {
+            Log::info('User already verified, no email sent:', [
+                'user_id' => $user->id,
+                'email_verified_at' => $user->email_verified_at,
+            ]);
             return Redirect::route('login')->with('status', 'すでに認証済みです。');
         }
 
-        $user->sendEmailVerificationNotification();
-        Log::info('After markEmailAsVerified', ['email_verified_at' => $user->email_verified_at]);
+        try {
+            // 認証メールを再送信
+            $user->sendEmailVerificationNotification();
+            Log::info('Verification email resent successfully:', ['user_id' => $user->id]);
+        } catch (\Exception $e) {
+            // メール送信が失敗した場合
+            Log::error('Failed to resend verification email:', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
+            return Redirect::route('verification.notice')->withErrors('認証メールの再送信に失敗しました。もう一度お試しください。');
+        }
+
         return Redirect::route('verification.notice')->with('status', '認証メールを再送信しました。');
     }
 }
