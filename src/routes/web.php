@@ -25,11 +25,17 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// メール認証
+// 認証が不要なルート
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->middleware(['signed']) // 署名付きURLを検証
+    ->name('verification.verify');
+
+// ログインが必要なルート
 Route::middleware('auth')->group(function () {
     Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
-    Route::post('/email/resend', [VerificationController::class, 'resend'])->middleware('throttle:6,1')->name('verification.resend');
-    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
+    Route::post('/email/resend', [VerificationController::class, 'resend'])
+        ->middleware('throttle:6,1') // 再送信の制限
+        ->name('verification.resend');
 });
 
 // メール送信確認画面
@@ -56,24 +62,6 @@ Route::middleware('auth')->prefix('attendance')->name('attendance.')->group(func
     // 管理者のみアクセス可能
     Route::middleware('can:manage-users')->group(function () {
         Route::get('/userlist', [AttendanceController::class, 'userslist'])->name('userslist');
-    });
-
-    Route::get('/debug-email-verification', function () {
-        if (!Auth::check()) {
-            return response()->json(['error' => 'User not logged in'], 403);
-        }
-
-        $user = Auth::user();
-        $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1($user->email)]
-        );
-
-        return response()->json([
-            'debug' => 'メール認証URLを生成しました。',
-            'verification_url' => $verificationUrl,
-        ]);
     });
 
     // デバッグ用認証バイパスルート
