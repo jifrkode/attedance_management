@@ -19,10 +19,12 @@ class VerificationController extends Controller
 
     public function verify(EmailVerificationRequest $request)
     {
-        dd($request->route('id'), $request->user());
         // リクエストからユーザーIDとハッシュを取得
         $id = $request->route('id');
         $hash = $request->route('hash');
+
+        // デバッグ情報をログに記録（必要に応じて有効化）
+        Log::info('Verification request received:', ['id' => $id, 'hash' => $hash]);
 
         // ユーザーを取得
         $user = User::find($id);
@@ -36,8 +38,19 @@ class VerificationController extends Controller
         // ハッシュを検証
         if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
             // ハッシュが一致しない場合の処理
-            Log::error('Hash mismatch for verification:', ['id' => $id, 'hash' => $hash]);
+            Log::error('Hash mismatch for verification:', [
+                'id' => $id,
+                'expected_hash' => sha1($user->getEmailForVerification()),
+                'provided_hash' => $hash,
+                'email' => $user->getEmailForVerification(),
+            ]);
             return redirect('/login')->withErrors('Invalid verification link.');
+        }
+
+        // すでに認証済みの場合
+        if ($user->hasVerifiedEmail()) {
+            Log::info('User already verified:', ['id' => $id]);
+            return redirect('/dashboard')->with('message', 'Email is already verified.');
         }
 
         // 認証を完了
@@ -47,6 +60,7 @@ class VerificationController extends Controller
         Log::info('Email verification completed for user:', ['id' => $id]);
         return redirect('/dashboard')->with('message', 'Email verified successfully!');
     }
+
 
 
     // 認証メールの再送信
