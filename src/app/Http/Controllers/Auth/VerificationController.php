@@ -62,10 +62,8 @@ class VerificationController extends Controller
         $user->markEmailAsVerified();
 
         Log::info('Email verified successfully:', ['id' => $id]);
-        return redirect('/dashboard')->with('message', 'Email verified successfully!');
+        return redirect('/login')->with('message', 'Email verified successfully!');
     }
-
-
 
     // 認証メールの再送信
     public function resend(Request $request)
