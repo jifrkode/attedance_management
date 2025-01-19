@@ -19,6 +19,7 @@ class VerificationController extends Controller
 
     public function verify(EmailVerificationRequest $request)
     {
+        dd($request->route('id'), $request->user());
         // リクエストからユーザーIDとハッシュを取得
         $id = $request->route('id');
         $hash = $request->route('hash');

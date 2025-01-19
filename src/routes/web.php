@@ -27,7 +27,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // 認証が不要なルート
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-    ->middleware(['signed']) // 署名付きURLを検証
+    ->middleware(['signed']) // 署名付きURLのみ許可
     ->name('verification.verify');
 
 // ログインが必要なルート
