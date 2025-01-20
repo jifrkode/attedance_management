@@ -31,7 +31,7 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'
     ->name('verification.verify');
 
 // ログイン不要でメール再送信
-Route::post('/email/resend', [VerificationController::class, 'resend'])
+Route::get('/email/resend', [VerificationController::class, 'resend'])
     ->middleware('throttle:6,1') // 再送信の制限
     ->name('verification.resend');
 
