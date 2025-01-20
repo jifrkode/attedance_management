@@ -14,12 +14,6 @@
         <p>認証が完了したら、以下のリンクからログインしてください。</p>
         <a href="{{ route('login') }}">ログインはこちら</a>
     </div>
-    @if (session('status'))
-    <div class="alert alert-success">
-        {{ session('status') }}
-    </div>
-    @endif
-
 </body>
 
 </html>
